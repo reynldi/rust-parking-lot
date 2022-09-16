@@ -3,10 +3,10 @@ use std::io;
 const MAX_ALLOC_LOT: i8 = 125;
 
 fn main() {
-    println!("===PARKING LOT ABC BUILDING===");
+    println!("<=== PARKING LOT ABC BUILDING ===>");
     println!("Available Max Parking Lot is: {}", MAX_ALLOC_LOT);
 
-    println!("Enter total available parking lot");
+    println!("Enter total parking lot you want to allocated:");
     let mut total_parking_lot = String::new();
 
     io::stdin()
@@ -16,7 +16,7 @@ fn main() {
     let total_parking_lot: i8 = match total_parking_lot.trim().parse() {
         Ok(num) => num,
         Err(_) => {
-            println!("Please check your input! (Only number)");
+            println!("Please check your input! (number only)");
             return;
         }
     };
@@ -61,16 +61,16 @@ fn park_now(alloc_parking_lot: &mut Vec<u32>) {
     loop {
         // Put your car number into parking lot
         println!(
-            "Enter which parking slot you will in for your car: {}",
+            "Enter which lot you will park your car: {}",
             car_number
         );
-        let mut parking_slot = String::new();
+        let mut selected_parking_lot = String::new();
 
         io::stdin()
-            .read_line(&mut parking_slot)
+            .read_line(&mut selected_parking_lot)
             .expect("Failed to read line");
 
-        let parking_slot: i8 = match parking_slot.trim().parse() {
+        let selected_parking_lot: i8 = match selected_parking_lot.trim().parse() {
             Ok(num) => num,
             Err(_) => {
                 println!("Please check your input!");
@@ -78,18 +78,23 @@ fn park_now(alloc_parking_lot: &mut Vec<u32>) {
             }
         };
 
-        let parking_slot = parking_slot as usize; // convert to usize
+        let selected_parking_lot = selected_parking_lot as usize; // convert to usize
 
-        if alloc_parking_lot[parking_slot] > 0 {
-            println!("Sorry, this slot is already taken!");
+        if selected_parking_lot > alloc_parking_lot.len() {
+            println!("Selected parking lot is not available");
             return;
         }
 
-        alloc_parking_lot[parking_slot] = car_number as u32;
+        if alloc_parking_lot[selected_parking_lot - 1] > 0 {
+            println!("Sorry, this lot is already taken!");
+            return;
+        }
+
+        alloc_parking_lot[selected_parking_lot - 1] = car_number as u32;
 
         println!(
             "Your car with car number {} is in parking lot: {}",
-            car_number, parking_slot
+            car_number, selected_parking_lot
         );
         println!("Allocated Parking Lot: {:?}", alloc_parking_lot);
         break;
